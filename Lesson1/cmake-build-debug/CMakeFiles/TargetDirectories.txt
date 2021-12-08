@@ -1,0 +1,3 @@
+/home/except/Prj/My/Lessons/CPPAdv/Lesson1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/except/Prj/My/Lessons/CPPAdv/Lesson1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/except/Prj/My/Lessons/CPPAdv/Lesson1/cmake-build-debug/CMakeFiles/Lesson1.dir
