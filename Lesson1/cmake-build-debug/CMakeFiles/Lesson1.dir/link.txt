@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/Lesson1.dir/main.cpp.o CMakeFiles/Lesson1.dir/Lesson.cpp.o CMakeFiles/Lesson1.dir/Person.cpp.o CMakeFiles/Lesson1.dir/PhoneNumber.cpp.o CMakeFiles/Lesson1.dir/PhoneBook.cpp.o  -o Lesson1 
