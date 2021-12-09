@@ -10,7 +10,7 @@ PhoneNumber::PhoneNumber(const std::string& s, int auxn)
 void PhoneNumber::SetNumber(const std::string& n)
 {
     //std::regex re("^(\\+)?((\\d{2,3}) ?\\d|\\d)(([ -]?\\d)|( ?(\\d{2,3}) ?)){5,12}\\d$");
-    std::regex re("^\\+\\d+\\(\\d+\\)\\d+$");
+    std::regex re("^\\+(\\d+)\\((\\d+)\\)(\\d+)$");
     std::smatch match;
     if(std::regex_match(n, match, re)) {
         countryCode = std::atoi(match[1].str().c_str());
