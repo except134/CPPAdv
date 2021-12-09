@@ -1,8 +1,7 @@
 #pragma once
 
-class PhoneNumber
+struct PhoneNumber
 {
-public:
     PhoneNumber() = default;
     PhoneNumber(int country, int city, const std::string& num, int aux = 0) :
         countryCode(country),
@@ -10,12 +9,15 @@ public:
         number(num),
         auxNumber(aux)
     {}
+    PhoneNumber(const std::string& s, int aux = 0);
+
+    void SetNumber(const std::string& n);
+    void SetAuxNumber(const std::string& aux) { auxNumber = std::atoi(aux.c_str()); }
 
     friend std::ostream& operator<<(std::ostream& stream, const PhoneNumber& p);
     friend bool operator < (const PhoneNumber& p1, const PhoneNumber& p2);
     friend bool operator == (const PhoneNumber& p1, const PhoneNumber& p2);
 
-private:
     int countryCode{0};
     int cityCode{0};
     std::string number;

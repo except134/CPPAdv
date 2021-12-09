@@ -4,8 +4,8 @@ int main()
 {
     try {
         Lesson();
-    } catch(std::exception& e) {
-        std::cout << "Исключение: " << e.what() << std::endl;
+    } catch(const char* e) {
+        std::cout << "Исключение: " << e << std::endl;
     }
 
     return 0;

@@ -1,6 +1,25 @@
 #include "Common.h"
 #include "PhoneNumber.h"
 
+PhoneNumber::PhoneNumber(const std::string& s, int auxn)
+{
+    SetNumber(s);
+    auxNumber = auxn;
+}
+
+void PhoneNumber::SetNumber(const std::string& n)
+{
+    //std::regex re("^(\\+)?((\\d{2,3}) ?\\d|\\d)(([ -]?\\d)|( ?(\\d{2,3}) ?)){5,12}\\d$");
+    std::regex re("^\\+\\d+\\(\\d+\\)\\d+$");
+    std::smatch match;
+    if(std::regex_match(n, match, re)) {
+        countryCode = std::atoi(match[1].str().c_str());
+        cityCode = std::atoi(match[2].str().c_str());
+        number = match[3].str();
+    } else
+        throw "Не известный формат номера телефона";
+}
+
 std::ostream& operator<<(std::ostream& stream, const PhoneNumber& p)
 {
     stream << "+" << p.countryCode;

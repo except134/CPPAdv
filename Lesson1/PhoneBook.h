@@ -10,5 +10,5 @@ public:
     PhoneBook(std::ifstream& ifs);
 
 private:
-    std::map<Person, PhoneNumber> peoples{};
+    std::vector<std::pair<Person, PhoneNumber>> peoples{};
 };
