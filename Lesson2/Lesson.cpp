@@ -1,10 +1,86 @@
 #include "Lesson.h"
 
-const std::vector<char16_t> GLASS_LETTERS{'а','А','е','Е','ё','Ё','и','И','о','О','у','У','э','Э','ы','Ы','ю','Ю','я','Я'};
+const std::string VOWEL_LETTERS = "аАеЕёЁиИоОуУэЭыЫюЮяЯ";
+
+void CountIfAndCount(const std::string& s)
+{
+    Timer timer("------ Count_if and count ------");
+
+    std::cout << std::endl << "Гласных букв: " <<
+        std::count_if(s.begin(), s.end(), [](char currentChar) -> bool
+        {
+            return std::count(VOWEL_LETTERS.begin(), VOWEL_LETTERS.end(), currentChar);
+        }) << std::endl;
+
+    timer.print();
+}
 
 void CountIfAndFind(const std::string& s)
 {
+    Timer timer("------ Count_if and find ------");
 
+    std::cout << std::endl << "Гласных букв: " <<
+        std::count_if(s.begin(), s.end(), [](char currentChar) -> bool
+        {
+            return std::find(VOWEL_LETTERS.begin(), VOWEL_LETTERS.end(), currentChar) != VOWEL_LETTERS.end();
+        }) << std::endl;
+
+    timer.print();
+}
+
+void CountIfAndFor(const std::string& s)
+{
+    Timer timer("------ Count_if and for ------");
+
+    std::cout << std::endl << "Гласных букв: " <<
+        std::count_if(s.begin(), s.end(), [](char currentChar) -> bool
+        {
+            for(auto i: VOWEL_LETTERS) {
+                if(i == currentChar)
+                    return true;
+            }
+            return false;
+        }) << std::endl;
+
+    timer.print();
+}
+
+void ForAndFind(const std::string& s)
+{
+    Timer timer("------ For and find ------");
+
+    std::cout << std::endl << "Гласных букв: ";
+
+    int cnt = 0;
+    for(auto i: s) {
+        if(std::find(VOWEL_LETTERS.begin(), VOWEL_LETTERS.end(), i) != VOWEL_LETTERS.end())
+            cnt++;
+    }
+
+    std::cout << cnt << std::endl;
+
+    timer.print();
+}
+
+void ForAndFor(const std::string& s)
+{
+    Timer timer("------ For and for ------");
+
+    std::cout << std::endl << "Гласных букв: ";
+
+    int cnt = 0;
+    for(auto tc: s) {
+        for(auto vc: VOWEL_LETTERS) {
+            if (tc == vc) {
+                cnt++;
+                break;
+            }
+        }
+    }
+
+    std::cout << cnt << std::endl;
+
+    timer.print();
 }
 
 void Lesson()
@@ -27,6 +103,11 @@ void Lesson()
     std::string wap{};
     std::getline(ifs, wap, '\0');
 
+    CountIfAndCount(wap);
+    CountIfAndFind(wap);
+    CountIfAndFor(wap);
+    ForAndFind(wap);
+    ForAndFor(wap);
 
 }
 
