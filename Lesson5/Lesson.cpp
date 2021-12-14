@@ -30,11 +30,37 @@ void Task1()
     PrintUnique(il.begin(), il.end());
 }
 
+std::string GetUserInput()
+{
+    std::string line;
+
+    while(true) {
+        if (!getline(std::cin, line)) {
+            throw "Критическая ошибка ввода!!!";
+        } else
+            break;
+    }
+
+    return line;
+}
+
 void Task2()
 {
     std::cout << "---------- Sentences ----------" << std::endl;
+    std::cout << "Вводите предложения.\nПо окончании ввода, нажмите Enter для ввода следующего предложения.\nНажмите Enter без ввода текста для завершения работы.\n" << std::endl;
 
-    
+    std::multimap<size_t, std::string, std::greater<size_t>> lines;
+
+    while(true) {
+        if(std::string line; !std::getline(std::cin, line)) {
+            throw "Критическая ошибка ввода!!!";
+        } else if(line.empty()) {
+            break;
+        } else
+            lines.insert(std::make_pair(line.size(), line));
+    }
+
+    std::for_each(lines.begin(), lines.end(), [](const auto& v){ std::cout << v.first << ": " << v.second << "\n"; });
 }
 
 void Lesson()
