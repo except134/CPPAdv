@@ -30,20 +30,6 @@ void Task1()
     PrintUnique(il.begin(), il.end());
 }
 
-std::string GetUserInput()
-{
-    std::string line;
-
-    while(true) {
-        if (!getline(std::cin, line)) {
-            throw "Критическая ошибка ввода!!!";
-        } else
-            break;
-    }
-
-    return line;
-}
-
 void Task2()
 {
     std::cout << "---------- Sentences ----------" << std::endl;
