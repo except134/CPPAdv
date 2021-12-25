@@ -14,5 +14,8 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+#include <random>
+#include <execution>
+#include <future>
 
 #include "Timer.h"

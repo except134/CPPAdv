@@ -1,9 +1,55 @@
 #include "Lesson.h"
 
+/////////////////// Task 1 /////////////////////
+
+class pcout
+{
+public:
+    pcout() : ulock(std::unique_lock<std::mutex>(mutex))
+    {
+    }
+
+    template <typename T>
+    pcout& operator<<(const T& data)
+    {
+        std::cout << data;
+        return *this;
+    }
+
+    pcout& operator<<(std::ostream& (*os)(std::ostream&))
+    {
+        std::cout << os;
+        return *this;
+    }
+
+private:
+    static std::mutex mutex;
+    std::unique_lock<std::mutex> ulock;
+};
+
+std::mutex pcout::mutex{};
+
+void Task1()
+{
+    std::cout << "---------- pcout ----------" << std::endl;
+
+    std::vector<std::jthread> pcout_threads;
+    size_t threads(std::jthread::hardware_concurrency());
+
+    for (size_t i = 0; i < threads; ++i) {
+        pcout_threads.emplace_back([&]
+            {
+                pcout() << "pcout test in thread " << std::this_thread::get_id() << std::endl;
+            });
+    }
+}
+
+/////////////////// Task 2 /////////////////////
+
 bool IsPrime(int64_t val)
 {
     int64_t finish = std::sqrt(std::abs(val));
-    for (int64_t i = 2; i <= val; i++) {
+    for (int64_t i = 2; i <= finish; i++) {
         if (val % i == 0) {
             return false;
         }
@@ -13,53 +59,106 @@ bool IsPrime(int64_t val)
 
 int64_t GetSimpleNumber(int64_t limit)
 {
-    int64_t counter=0;
+    int64_t counter{0};
+    int64_t index{2};
 
-    if(limit == 0)
-        return 0;
-
-    if(limit == 1)
-        return 1;
-
-    int64_t ret{0};
-
-    for(int64_t i{1}; i <= 4 * limit; ++i) {
-        if(IsPrime(i)) {
+    for(index = 2, counter = 0; counter < limit; index++) {
+        if(IsPrime(index)) {
             ++counter;
-            if (counter == limit) {
-                ret = i;
-                break;
-            }
         }
     }
-    return ret;
+
+    return index;
 }
 
-void Task1() {
-    std::cout << "---------- pcout ----------" << std::endl;
+void Task2()
+{
+    std::cout << "---------- N-th prime ----------" << std::endl;
 
-    int tCount = std::thread::hardware_concurrency();
-    int64_t lim = 100;
-
-    std::thread *arr;
-    arr = new std::thread[tCount];
+    int64_t lim = 1000000;
+    int64_t result{0};
 
     Timer timer("Primes");
 
-    for (int64_t i = 1; i < lim; i++) {
-        int64_t result{};
-        std::thread t([&result](int idx) { result = GetSimpleNumber(idx); }, i);
-        t.join();
-        std::cout << "Threads: " << tCount << " Result: " << result << std::endl;
-    }
+    std::jthread t([&]{ result = GetSimpleNumber(lim); });
+    t.join();
+    std::cout << "Result: " << result << std::endl;
 
     timer.print();
+}
 
-    delete [] arr;
+/////////////////// Task 3 /////////////////////
+
+void PrintVector(const auto& l)
+{
+    std::for_each(l.begin(), l.end(), [](const auto& v){ std::cout << v << " "; });
+    std::cout << std::endl;
+    std::cout << std::endl;
+}
+
+template<typename T>
+T GetRandom(T minVal, T maxVal)
+{
+    std::random_device rd;
+    static std::mt19937 ms(rd());
+    if(std::is_floating_point_v<T>) {
+        std::uniform_real_distribution<> uid(minVal, maxVal);
+        return uid(ms);
+    }
+
+    std::uniform_int_distribution<> uid(minVal, maxVal);
+    return uid(ms);
+}
+
+std::mutex storeMutex;
+
+void HostPutToStore(std::vector<int>& store)
+{
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    int item = GetRandom(1, 1000);
+    std::lock_guard<std::mutex> lock(storeMutex);
+    store.emplace_back(item);
+    pcout() << "Хозяин кладет на склад " << item << std::endl;
+
+    pcout() << "Содержимое склада: ";
+    PrintVector(store);
+}
+
+void ThiefGetFromStore(std::vector<int>& store)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    auto maxItem{std::max_element(std::execution::par, store.begin(), store.end())};
+    if(maxItem != store.end()) {
+        int item{*maxItem};
+        std::lock_guard<std::mutex> lock(storeMutex);
+        store.erase(maxItem);
+        pcout() << "Вор крадет со склада " << item << std::endl;
+    }
+
+    pcout() << "Содержимое склада: ";
+    PrintVector(store);
+}
+
+void Task3()
+{
+    std::vector<int> store{};
+
+    for (size_t j{}; j < 30; ++j) {
+        store.emplace_back(GetRandom(1, 1000));
+    }
+
+    for (size_t i{}; i < std::thread::hardware_concurrency(); ++i) {
+        std::jthread host{HostPutToStore, std::ref(store)};
+        std::jthread thief{ThiefGetFromStore, std::ref(store)};
+    }
 }
 
 void Lesson()
 {
     Task1();
+    Task2();
+    Task3();
 }
 
