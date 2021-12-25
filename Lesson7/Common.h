@@ -11,3 +11,6 @@
 #include <list>
 #include <vector>
 #include <limits>
+#include <numeric>
+#include <random>
+#include <sstream>
