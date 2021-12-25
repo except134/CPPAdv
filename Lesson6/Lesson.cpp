@@ -119,9 +119,9 @@ void HostPutToStore(std::vector<int>& store)
     int item = GetRandom(1, 1000);
     std::lock_guard<std::mutex> lock(storeMutex);
     store.emplace_back(item);
-    pcout() << "Хозяин кладет на склад " << item << std::endl;
+    std::cout << "Хозяин кладет на склад " << item << std::endl;
 
-    pcout() << "Содержимое склада: ";
+    std::cout << "Содержимое склада: ";
     PrintVector(store);
 }
 
@@ -134,10 +134,10 @@ void ThiefGetFromStore(std::vector<int>& store)
         int item{*maxItem};
         std::lock_guard<std::mutex> lock(storeMutex);
         store.erase(maxItem);
-        pcout() << "Вор крадет со склада " << item << std::endl;
+        std::cout << "Вор крадет со склада " << item << std::endl;
     }
 
-    pcout() << "Содержимое склада: ";
+    std::cout << "Содержимое склада: ";
     PrintVector(store);
 }
 
